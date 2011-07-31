@@ -1,0 +1,13 @@
+.DS*
+build/**/*
+nbproject
+.tmp*~
+.idea
+.loadpath
+.project
+.rvmrc
+mkmf.log
+sublime*
+*.log
+.fastdev.lock
+*.apk
