@@ -1,5 +1,5 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
-Titanium.UI.setBackgroundColor('#222222');
+Titanium.UI.setBackgroundColor('#222');
 
 // HTTP address
 Titanium.App.Properties.setString('http', 'http://blah.blah.com');
@@ -10,7 +10,7 @@ var tabGroup = Titanium.UI.createTabGroup();
 ///////////////////////////////////////////////////////////////////////////////
 // ATP Home tab and root window
 var homeWin = Titanium.UI.createWindow({
-    backgroundColor:'#222222',
+    backgroundColor:'#222',
     url:'home.js'
 });
 var homeTab = Titanium.UI.createTab({  
@@ -20,21 +20,35 @@ var homeTab = Titanium.UI.createTab({
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// Position tab
-var positionWin = Titanium.UI.createWindow({  
-    title:'Positions',
-    backgroundColor:'#222222',
-    url:'positions.js'
+// Active tab
+var activeWin = Titanium.UI.createWindow({  
+    title:'Active',
+    backgroundColor:'#222',
+    url:'active.js'
 });
-var positionTab = Titanium.UI.createTab({  
-    icon:'app://images/tab/nav-positions.png',
-    title:'Positions',
-    window:positionWin
+var activeTab = Titanium.UI.createTab({  
+    icon:'app://images/tab/nav-active.png',
+    title:'Active',
+    window:activeWin
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// Core tab
+var coreWin = Titanium.UI.createWindow({  
+    title:'Core',
+    backgroundColor:'#222',
+    url:'core.js'
+});
+var coreTab = Titanium.UI.createTab({  
+    icon:'app://images/tab/nav-core.png',
+    title:'Core',
+    window:coreWin
 });
 
 ///////////////////////////////////////////////////////////////////////////////
 // Add tabs
 tabGroup.addTab(homeTab);  
-tabGroup.addTab(positionTab);  
+tabGroup.addTab(activeTab);  
+tabGroup.addTab(coreTab);  
 tabGroup.setActiveTab(0);
 tabGroup.open();
