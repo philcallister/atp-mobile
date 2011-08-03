@@ -5,9 +5,9 @@ if (Titanium.Platform.name == 'android')
 }
 if (isAndroid)
 {
-	Ti.include("js/android/home.js");
+	Ti.include("js/android/active.js");
 }
 else
 {
-	Ti.include("js/iphone/home.js");
+	Ti.include("js/iphone/active.js");
 }

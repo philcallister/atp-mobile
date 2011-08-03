@@ -23,7 +23,7 @@ function addEntry (current, day, month, action, comment)
 {
 	var entryRow = Ti.UI.createTableViewRow({
 		className: 'tableListRow',
-		backgroundColor: current ? '#edbd47' : '#222', 
+		backgroundColor: current ? '#f2bd4b' : '#222', 
 		hasChild: false,
 		height: 'auto',
 		left: 0
@@ -80,7 +80,7 @@ function addEntry (current, day, month, action, comment)
 		top:10,
 		title: comment,
 		font: {fontSize: 20},
-		color: current ? '#666' : '#aaa'
+		color: current ? '#222' :'#aaa'
 	});
 	entryViewRight.add(entryAction);
 	entryView.add(entryViewRight);
