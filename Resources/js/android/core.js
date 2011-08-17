@@ -3,33 +3,54 @@ Ti.include('app://js/android/util.js');
 var win = Titanium.UI.currentWindow;
 var activity = Ti.Android.currentActivity;
 
+var http = Titanium.App.Properties.getString('http');
+
 var listView = null;
+var actInd = null;
 
 win.addEventListener('open', function()
 {
-	Ti.API.info('Active: open...');
-	loadList();
+	Ti.API.info('Core: open...');
+	loadCoreList();
 });
 
 activity.onCreateOptionsMenu = function(e)
 {
-	Ti.API.info('Active: creating active menu...');
+	Ti.API.info('Core: creating core menu...');
 };
 
 activity.onPrepareOptionsMenu = function(e)
 {
-	Ti.API.info('Active: preparing active menu...');
+	Ti.API.info('Core: preparing core menu...');
 };
 
-function loadList()
+function loadCoreList()
 {
-	listView.hide();
+	Ti.API.info('Core: loading positions...');
 	actInd.show();
-	listView.appendRow(addEntry('HGSI', '18.90', '20.01', '8%', true, '0.63 (3.23%', false, 'images/alert.png', 48, 'Scale in 18.05 - 18.10 range to buy 1/2 position'));
-	listView.appendRow(addEntry('VMW', '95.07', '99.35', '10%', true, '4.88 (4.88%)', false, 'images/ok.png', 45, 'Max 92 to buy 1/2 position'));
-	listView.appendRow(addEntry('AUY', '13.48', '13.60', '5%', true, '0.39 (2.98%', true, 'images/ok.png', 45, 'Scale in 12.92 - 13.01 range to buy 1/3 position'));
-	actInd.hide();
-	listView.show();
+	listView.hide();
+	var xhr = Titanium.Network.createHTTPClient({validatesSecureCertificate: false});
+	xhr.onload = function()
+	{
+		Ti.API.info('Core: positions received...');
+		var response = JSON.parse(this.responseText);
+		for (var i = 0; i < response.length; i++)
+		{
+			var p = response[i].position;
+			listView.appendRow(addPositionEntry(p.id, p.ticker, p.price, p.max_price, p.max_upside, p.is_up_max, p.change + ' (' + p.percent + ')', p.is_up, 'images/alert.png', 48, p.recent_alert.action));
+		}
+		actInd.hide();
+		listView.show();
+	};
+	xhr.onerror = function(e)
+	{
+		Ti.API.info('Loading Core Positions...Error');
+		Ti.API.error(e.error);
+		actInd.hide();
+		alert('Unable to load core positions.  Please check network connectivity.');
+	};
+	xhr.open("GET", http + "/positions/core.json");
+	xhr.send();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +66,7 @@ listView.addEventListener('click', function(e)
 		url: 'app://js/android/alert.js',
 		title:'Alerts',
 		backgroundColor:"#222",
+		positionId: row.positionId
 	});
 	Titanium.UI.currentTab.open(alertWin,{animated:true});
 });

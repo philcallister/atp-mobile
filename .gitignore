@@ -7,7 +7,7 @@ nbproject
 .project
 .rvmrc
 mkmf.log
-sublime*
+*.sublime-project
 *.log
 .fastdev.lock
 *.apk

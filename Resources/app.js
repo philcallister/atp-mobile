@@ -2,7 +2,7 @@
 Titanium.UI.setBackgroundColor('#222');
 
 // HTTP address
-Titanium.App.Properties.setString('http', 'http://blah.blah.com');
+Titanium.App.Properties.setString('http', 'http://192.168.2.3:3000');
 
 // create tab group
 var tabGroup = Titanium.UI.createTabGroup();

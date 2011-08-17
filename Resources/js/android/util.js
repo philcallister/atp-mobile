@@ -1,11 +1,12 @@
-function addEntry (ticker, price, max, up, isUp, change, changeUp, icon, iconWidth, scaleComment)
+function addPositionEntry (positionId, ticker, price, max, up, isUp, change, changeUp, icon, iconWidth, scaleComment)
 {
 	var entryRow = Ti.UI.createTableViewRow({
 		className: 'tableListRow',
 		hasChild: false,
 		//height: 80,
 		height: 'auto',
-		left: 0
+		left: 0,
+		positionId: positionId
 	});
 	var entryView = Ti.UI.createView();
 

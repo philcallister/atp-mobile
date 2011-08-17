@@ -1,12 +1,16 @@
 var win = Titanium.UI.currentWindow;
 var activity = Ti.Android.currentActivity;
 
+var http = Titanium.App.Properties.getString('http');
+
 var alertView = null;
+var actInd = null;
+var positionId = win.positionId;
 
 win.addEventListener('open', function()
 {
 	Ti.API.info('Alert: open...');
-	loadList();
+	loadAlerts();
 });
 
 activity.onCreateOptionsMenu = function(e)
@@ -19,7 +23,7 @@ activity.onPrepareOptionsMenu = function(e)
 	Ti.API.info('Alert: preparing alert menu...');
 };
 
-function addEntry (current, day, month, action, comment)
+function addAlertEntry (current, day, month, action, comment)
 {
 	var entryRow = Ti.UI.createTableViewRow({
 		className: 'tableListRow',
@@ -90,12 +94,33 @@ function addEntry (current, day, month, action, comment)
 	return entryRow;
 }
 
-function loadList()
+function loadAlerts()
 {
-	alertView.appendRow(addEntry(true, '01', 'AUG', 'SELL remaining, place stop at 15.29', 'This one has run its course.  Advice to SELL before hits stop value.'));
-	alertView.appendRow(addEntry(false, '28', 'JUL', 'First scale out range from 15.08 - 15.13, SELL 1st 1/2', 'Huge volumes again today. 15% gains from initial buys.  Advice to SELL at given range'));
-	alertView.appendRow(addEntry(false, '26', 'JUL', '2nd scale in range from 12.44 - 12.48, BUY 2nd 1/2', 'Pullback on lower volumes today.  Advice to BUY at given range'));
-	alertView.appendRow(addEntry(false, '23', 'JUL', 'Gap at 12.23, BUY 1/2 position to 13', 'Runs up 23% today on huge volume to 12.20.  Recent advice to BUY'));
+	Ti.API.info('Alert: loading alerts...');
+	actInd.show();
+	alertView.hide();
+	var xhr = Titanium.Network.createHTTPClient({validatesSecureCertificate: false});
+	xhr.onload = function()
+	{
+		Ti.API.info('Alert: alerts received...');
+		var response = JSON.parse(this.responseText);
+		for (var i = 0; i < response.length; i++)
+		{
+			var a = response[i].alert;
+			alertView.appendRow(addAlertEntry((i == 0), a.day, a.month, a.action, a.comment));
+		}
+		actInd.hide();
+		alertView.show();
+	};
+	xhr.onerror = function(e)
+	{
+		Ti.API.info('Loading Alerts...Error');
+		Ti.API.error(e.error);
+		actInd.hide();
+		alert('Unable to load alerts.  Please check network connectivity.');
+	};
+	xhr.open("GET", http + "/positions/" + positionId + "/alerts.json");
+	xhr.send();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
